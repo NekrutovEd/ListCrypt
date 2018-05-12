@@ -51,4 +51,8 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
         //TODO обработка ошибок
         Log.e(TAG, "handleError: " + throwable.getMessage(), throwable);
     }
+
+    public void onSearch(CharSequence charSequence) {
+        //TODO поиск и фильтрация
+    }
 }
