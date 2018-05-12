@@ -22,6 +22,17 @@ public class CryptoCurrency {
     private Long lastUpdated;
 
 
+    /**
+     * Returns true if and only if {@code CryptoCurrency.name} or {@code CryptoCurrency.symbol} contains string.
+     * Without the register
+     *
+     * @param textSearch the string to search for
+     */
+    public boolean contains(String textSearch) {
+        return name.toLowerCase().contains(textSearch.toLowerCase())
+                || symbol.toLowerCase().contains(textSearch.toLowerCase());
+    }
+
     public String getId() {
         return id;
     }

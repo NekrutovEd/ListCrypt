@@ -27,7 +27,7 @@ class ListCryptRecyclerAdapter extends RecyclerView.Adapter<ListCryptRecyclerAda
         this.onClickCryptoCurrencyListener = onClickCryptoCurrencyListener;
     }
 
-    void setCryptoCurrencies(List<CryptoCurrency> cryptoCurrencies) {
+    void setCryptoCurrencies(@NonNull List<CryptoCurrency> cryptoCurrencies) {
         this.cryptoCurrencies = cryptoCurrencies;
         notifyDataSetChanged();
     }

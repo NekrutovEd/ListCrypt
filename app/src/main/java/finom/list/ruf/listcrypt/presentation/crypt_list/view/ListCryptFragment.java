@@ -42,7 +42,6 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
 
     @InjectPresenter
     public ListCryptPresenter presenter;
-    private SwipeRefreshLayout swipeRefresh;
 
     @ProvidePresenter
     public ListCryptPresenter providePresenter() {
@@ -50,6 +49,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
     }
 
     private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefresh;
     private ListCryptRecyclerAdapter adapter;
 
     public static ListCryptFragment newInstance() {
@@ -97,37 +97,53 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
         presenter.start();
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_and_sort, menu);
 
         SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        ImageView imageSearch = searchView.findViewById(android.support.v7.appcompat.R.id.search_button);
-        ImageView imageClose = searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-        imageSearch.setImageResource(R.drawable.ic_baseline_search_white_24px);
-        imageClose.setImageResource(R.drawable.ic_baseline_close_white_24px);
-        searchView.setIconifiedByDefault(true);
-
-        RxSearchView.queryTextChanges(searchView)
-                .observeOn(AndroidSchedulers.mainThread())
-                .throttleLast(1, TimeUnit.SECONDS)
-                .subscribe(presenter::onSearch);
+        initSearchItemMenu(searchView);
 
         MenuItem sortItem = menu.findItem(R.id.app_bar_sort);
-        searchView.setOnQueryTextFocusChangeListener((view, hasFocus) -> {
-            if (hasFocus) sortItem.setVisible(false);
-        });
-        searchView.setOnCloseListener(() -> {
-            sortItem.setVisible(true);
-            return false;
-        });
+        initSortItemMenu(sortItem);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressLint("CheckResult")
+    private void initSearchItemMenu(SearchView searchView) {
+        ImageView imageSearchMagIcon = searchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+        ImageView imageSearchButton = searchView.findViewById(android.support.v7.appcompat.R.id.search_button);
+        ImageView imageClose = searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+        imageSearchMagIcon.setImageResource(R.drawable.ic_baseline_search_white_24px);
+        imageSearchButton.setImageResource(R.drawable.ic_baseline_search_white_24px);
+        imageClose.setImageResource(R.drawable.ic_baseline_close_white_24px);
+
+        SearchView.SearchAutoComplete searchAutoComplete = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
+        int colorWhite = getResources().getColor(R.color.colorWhite);
+        searchAutoComplete.setTextColor(colorWhite);
+        searchAutoComplete.setHintTextColor(colorWhite);
+        searchAutoComplete.setLinkTextColor(colorWhite);
+        searchAutoComplete.setHighlightColor(colorWhite);
+
+        searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint(getText(R.string.search));
+
+        RxSearchView.queryTextChanges(searchView)
+                .observeOn(AndroidSchedulers.mainThread())
+                .throttleLast(1, TimeUnit.SECONDS)
+                .map(CharSequence::toString)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(presenter::onSearch);
+    }
+
+    private void initSortItemMenu(MenuItem sortItem) {
+        //TODO кнопка сортировки
+    }
+
     @Override
-    public void updateListCryptoCurrency(List<CryptoCurrency> cryptoCurrencies) {
+    public void updateListCryptoCurrency(@NonNull List<CryptoCurrency> cryptoCurrencies) {
         adapter.setCryptoCurrencies(cryptoCurrencies);
     }
 
