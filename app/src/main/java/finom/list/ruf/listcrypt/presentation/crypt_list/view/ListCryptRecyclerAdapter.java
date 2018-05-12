@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import finom.list.ruf.listcrypt.R;
+import finom.list.ruf.listcrypt.busines.interactor.Interactor;
 import finom.list.ruf.listcrypt.presentation.data.CryptoCurrency;
 import finom.list.ruf.listcrypt.repository.dto.CryptoCurrencyDTO;
 
@@ -48,16 +51,47 @@ class ListCryptRecyclerAdapter extends RecyclerView.Adapter<ListCryptRecyclerAda
     class ListCryptViewHolder extends RecyclerView.ViewHolder {
 
         private ConstraintLayout constraintLayout;
+        private TextView symbolTextView;
         private TextView nameTextView;
+        private TextView marketCapTextView;
+        private TextView volumeTextView;
+        private TextView priceTextView;
+        private TextView priceChangeTextView;
 
         private ListCryptViewHolder(View itemView) {
             super(itemView);
             constraintLayout = itemView.findViewById(R.id.view_holder_list_crypt_item_constraint_layout);
+            symbolTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_symbol);
             nameTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_name);
+            marketCapTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_market_cap);
+            volumeTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_volume);
+            priceTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_price);
+            priceChangeTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_price_change);
         }
 
         private void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+            symbolTextView.setText(cryptoCurrency.getSymbol());
             nameTextView.setText(cryptoCurrency.getName());
+            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+            marketCapTextView.setText(String.format("MC: %s", format.format(cryptoCurrency.getMarketCapUsd())));
+            volumeTextView.setText(String.format("V: %s", format.format(cryptoCurrency.getVolumeUsd_24h())));
+            priceTextView.setText(format.format(cryptoCurrency.getPriceUsd()));
+
+            String formatPercent = "%s%%";
+            if (cryptoCurrency.getPercentChange_24h() > 0) {
+                priceChangeTextView.setTextColor(
+                        priceChangeTextView.getResources().getColor(R.color.colorGreen));
+                formatPercent = "+%s%%";
+            } else if (cryptoCurrency.getPercentChange_24h() < 0) {
+                priceChangeTextView.setTextColor(
+                        priceChangeTextView.getResources().getColor(R.color.colorRed));
+            } else {
+                priceChangeTextView.setTextColor(
+                        priceChangeTextView.getResources().getColor(R.color.colorGreen));
+            }
+            priceChangeTextView.setText(String.format(formatPercent, cryptoCurrency.getPercentChange_24h()));
+
+
             constraintLayout.setOnClickListener(
                     v -> onClickCryptoCurrencyListener.onClickCryptoCurrency(cryptoCurrency));
         }

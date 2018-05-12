@@ -1,4 +1,4 @@
-package finom.list.ruf.listcrypt.busines.interactor.entity;
+package finom.list.ruf.listcrypt.busines.entity;
 
 import finom.list.ruf.listcrypt.presentation.data.CryptoCurrency;
 import finom.list.ruf.listcrypt.repository.dto.CryptoCurrencyDTO;
@@ -9,16 +9,16 @@ public class CryptoCurrencyEntity {
     private String name;
     private String symbol;
     private Integer rank;
-    private Double priceUsd;
-    private Double priceBtc;
-    private Double volumeUsd_24h;
+    private Float priceUsd;
+    private Float priceBtc;
+    private Long volumeUsd_24h;
     private Long marketCapUsd;
-    private Double availableSupply;
-    private Double totalSupply;
-    private Double maxSupply;
-    private Double percentChange_1h;
-    private Double percentChange_24h;
-    private Double percentChange_7d;
+    private Long availableSupply;
+    private Long totalSupply;
+    private Long maxSupply;
+    private Float percentChange_1h;
+    private Float percentChange_24h;
+    private Float percentChange_7d;
     private Long lastUpdated;
 
     public static CryptoCurrencyEntity castDTO(CryptoCurrencyDTO cryptoCurrencyDTO) {
@@ -93,27 +93,27 @@ public class CryptoCurrencyEntity {
         this.rank = rank;
     }
 
-    public Double getPriceUsd() {
+    public Float getPriceUsd() {
         return priceUsd;
     }
 
-    public void setPriceUsd(Double priceUsd) {
+    public void setPriceUsd(Float priceUsd) {
         this.priceUsd = priceUsd;
     }
 
-    public Double getPriceBtc() {
+    public Float getPriceBtc() {
         return priceBtc;
     }
 
-    public void setPriceBtc(Double priceBtc) {
+    public void setPriceBtc(Float priceBtc) {
         this.priceBtc = priceBtc;
     }
 
-    public Double getVolumeUsd_24h() {
+    public Long getVolumeUsd_24h() {
         return volumeUsd_24h;
     }
 
-    public void setVolumeUsd_24h(Double volumeUsd_24h) {
+    public void setVolumeUsd_24h(Long volumeUsd_24h) {
         this.volumeUsd_24h = volumeUsd_24h;
     }
 
@@ -125,51 +125,51 @@ public class CryptoCurrencyEntity {
         this.marketCapUsd = marketCapUsd;
     }
 
-    public Double getAvailableSupply() {
+    public Long getAvailableSupply() {
         return availableSupply;
     }
 
-    public void setAvailableSupply(Double availableSupply) {
+    public void setAvailableSupply(Long availableSupply) {
         this.availableSupply = availableSupply;
     }
 
-    public Double getTotalSupply() {
+    public Long getTotalSupply() {
         return totalSupply;
     }
 
-    public void setTotalSupply(Double totalSupply) {
+    public void setTotalSupply(Long totalSupply) {
         this.totalSupply = totalSupply;
     }
 
-    public Double getMaxSupply() {
+    public Long getMaxSupply() {
         return maxSupply;
     }
 
-    public void setMaxSupply(Double maxSupply) {
+    public void setMaxSupply(Long maxSupply) {
         this.maxSupply = maxSupply;
     }
 
-    public Double getPercentChange_1h() {
+    public Float getPercentChange_1h() {
         return percentChange_1h;
     }
 
-    public void setPercentChange_1h(Double percentChange_1h) {
+    public void setPercentChange_1h(Float percentChange_1h) {
         this.percentChange_1h = percentChange_1h;
     }
 
-    public Double getPercentChange_24h() {
+    public Float getPercentChange_24h() {
         return percentChange_24h;
     }
 
-    public void setPercentChange_24h(Double percentChange_24h) {
+    public void setPercentChange_24h(Float percentChange_24h) {
         this.percentChange_24h = percentChange_24h;
     }
 
-    public Double getPercentChange_7d() {
+    public Float getPercentChange_7d() {
         return percentChange_7d;
     }
 
-    public void setPercentChange_7d(Double percentChange_7d) {
+    public void setPercentChange_7d(Float percentChange_7d) {
         this.percentChange_7d = percentChange_7d;
     }
 

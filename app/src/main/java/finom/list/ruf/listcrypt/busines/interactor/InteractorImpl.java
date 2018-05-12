@@ -3,7 +3,7 @@ package finom.list.ruf.listcrypt.busines.interactor;
 import java.util.ArrayList;
 import java.util.List;
 
-import finom.list.ruf.listcrypt.busines.interactor.entity.CryptoCurrencyEntity;
+import finom.list.ruf.listcrypt.busines.entity.CryptoCurrencyEntity;
 import finom.list.ruf.listcrypt.presentation.data.CryptoCurrency;
 import finom.list.ruf.listcrypt.repository.Repository;
 import finom.list.ruf.listcrypt.repository.RepositoryImpl;

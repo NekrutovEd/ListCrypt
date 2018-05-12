@@ -3,7 +3,7 @@ package finom.list.ruf.listcrypt.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import finom.list.ruf.listcrypt.busines.interactor.entity.CryptoCurrencyEntity;
+import finom.list.ruf.listcrypt.busines.entity.CryptoCurrencyEntity;
 import finom.list.ruf.listcrypt.data_base.NetworkService;
 import finom.list.ruf.listcrypt.repository.dto.CryptoCurrencyDTO;
 import io.reactivex.Single;

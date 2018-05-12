@@ -23,15 +23,15 @@ public class CryptoCurrencyDTO {
 
     @SerializedName("price_usd")
     @Expose
-    private Double priceUsd;
+    private Float priceUsd;
 
     @SerializedName("price_btc")
     @Expose
-    private Double priceBtc;
+    private Float priceBtc;
 
     @SerializedName("24h_volume_usd")
     @Expose
-    private Double volumeUsd_24h;
+    private Long volumeUsd_24h;
 
     @SerializedName("market_cap_usd")
     @Expose
@@ -39,27 +39,27 @@ public class CryptoCurrencyDTO {
 
     @SerializedName("available_supply")
     @Expose
-    private Double availableSupply;
+    private Long availableSupply;
 
     @SerializedName("total_supply")
     @Expose
-    private Double totalSupply;
+    private Long totalSupply;
 
     @SerializedName("max_supply")
     @Expose
-    private Double maxSupply;
+    private Long maxSupply;
 
     @SerializedName("percent_change_1h")
     @Expose
-    private Double percentChange_1h;
+    private Float percentChange_1h;
 
     @SerializedName("percent_change_24h")
     @Expose
-    private Double percentChange_24h;
+    private Float percentChange_24h;
 
     @SerializedName("percent_change_7d")
     @Expose
-    private Double percentChange_7d;
+    private Float percentChange_7d;
 
     @SerializedName("last_updated")
     @Expose
@@ -69,16 +69,16 @@ public class CryptoCurrencyDTO {
                              String name,
                              String symbol,
                              Integer rank,
-                             Double priceUsd,
-                             Double priceBtc,
-                             Double volumeUsd_24h,
+                             Float priceUsd,
+                             Float priceBtc,
+                             Long volumeUsd_24h,
                              Long marketCapUsd,
-                             Double availableSupply,
-                             Double totalSupply,
-                             Double maxSupply,
-                             Double percentChange_1h,
-                             Double percentChange_24h,
-                             Double percentChange_7d,
+                             Long availableSupply,
+                             Long totalSupply,
+                             Long maxSupply,
+                             Float percentChange_1h,
+                             Float percentChange_24h,
+                             Float percentChange_7d,
                              Long lastUpdated) {
         this.id = id;
         this.name = name;
@@ -129,27 +129,27 @@ public class CryptoCurrencyDTO {
         this.rank = rank;
     }
 
-    public Double getPriceUsd() {
+    public Float getPriceUsd() {
         return priceUsd;
     }
 
-    public void setPriceUsd(Double priceUsd) {
+    public void setPriceUsd(Float priceUsd) {
         this.priceUsd = priceUsd;
     }
 
-    public Double getPriceBtc() {
+    public Float getPriceBtc() {
         return priceBtc;
     }
 
-    public void setPriceBtc(Double priceBtc) {
+    public void setPriceBtc(Float priceBtc) {
         this.priceBtc = priceBtc;
     }
 
-    public Double getVolumeUsd_24h() {
+    public Long getVolumeUsd_24h() {
         return volumeUsd_24h;
     }
 
-    public void setVolumeUsd_24h(Double volumeUsd_24h) {
+    public void setVolumeUsd_24h(Long volumeUsd_24h) {
         this.volumeUsd_24h = volumeUsd_24h;
     }
 
@@ -161,51 +161,51 @@ public class CryptoCurrencyDTO {
         this.marketCapUsd = marketCapUsd;
     }
 
-    public Double getAvailableSupply() {
+    public Long getAvailableSupply() {
         return availableSupply;
     }
 
-    public void setAvailableSupply(Double availableSupply) {
+    public void setAvailableSupply(Long availableSupply) {
         this.availableSupply = availableSupply;
     }
 
-    public Double getTotalSupply() {
+    public Long getTotalSupply() {
         return totalSupply;
     }
 
-    public void setTotalSupply(Double totalSupply) {
+    public void setTotalSupply(Long totalSupply) {
         this.totalSupply = totalSupply;
     }
 
-    public Double getMaxSupply() {
+    public Long getMaxSupply() {
         return maxSupply;
     }
 
-    public void setMaxSupply(Double maxSupply) {
+    public void setMaxSupply(Long maxSupply) {
         this.maxSupply = maxSupply;
     }
 
-    public Double getPercentChange_1h() {
+    public Float getPercentChange_1h() {
         return percentChange_1h;
     }
 
-    public void setPercentChange_1h(Double percentChange_1h) {
+    public void setPercentChange_1h(Float percentChange_1h) {
         this.percentChange_1h = percentChange_1h;
     }
 
-    public Double getPercentChange_24h() {
+    public Float getPercentChange_24h() {
         return percentChange_24h;
     }
 
-    public void setPercentChange_24h(Double percentChange_24h) {
+    public void setPercentChange_24h(Float percentChange_24h) {
         this.percentChange_24h = percentChange_24h;
     }
 
-    public Double getPercentChange_7d() {
+    public Float getPercentChange_7d() {
         return percentChange_7d;
     }
 
-    public void setPercentChange_7d(Double percentChange_7d) {
+    public void setPercentChange_7d(Float percentChange_7d) {
         this.percentChange_7d = percentChange_7d;
     }
 

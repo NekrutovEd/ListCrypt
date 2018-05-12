@@ -69,7 +69,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center_vertical|start"
             android:text="MC: $141570030201"
-            app:layout_constraintEnd_toStartOf="@id/view_holder_list_crypt_item_volume"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_holder_list_crypt_item_name" />
 
@@ -78,11 +78,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="center_vertical|end"
+            android:gravity="center_vertical|start"
             android:text="V: $7375090000.0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/view_holder_list_crypt_item_market_cap"
-            app:layout_constraintTop_toBottomOf="@+id/view_holder_list_crypt_item_name" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_holder_list_crypt_item_market_cap" />
 
 
     </android.support.constraint.ConstraintLayout>
