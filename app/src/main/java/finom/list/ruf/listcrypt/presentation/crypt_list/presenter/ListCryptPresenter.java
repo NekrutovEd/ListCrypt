@@ -59,6 +59,8 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
     private void handleError(Throwable throwable) {
         //TODO обработка ошибок
         Log.e(TAG, "handleError: " + throwable.getMessage(), throwable);
+        getViewState().showErrorMessage("Произошла ошибка");
+        getViewState().hideLoading();
     }
 
     public void onSearch(String queryOfSearch) {

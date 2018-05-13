@@ -22,5 +22,8 @@ public interface ListCryptView {
 
         @StateStrategyType(SkipStrategy.class)
         void showCryptDetails(CryptoCurrency cryptoCurrency);
+
+        @StateStrategyType(SkipStrategy.class)
+        void showErrorMessage(String errorMessage);
     }
 }
