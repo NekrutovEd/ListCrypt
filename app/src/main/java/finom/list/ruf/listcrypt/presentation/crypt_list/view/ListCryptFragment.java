@@ -117,7 +117,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_and_sort, menu);
 
-        if(menu instanceof MenuBuilder){
+        if (menu instanceof MenuBuilder) {
             MenuBuilder menuBuilder = (MenuBuilder) menu;
             menuBuilder.setOptionalIconsVisible(true);
         }
@@ -192,11 +192,6 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
 
     @Override
     public void showListCryptoCurrency() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionManager.beginDelayedTransition(swipeRefresh, new Slide(Gravity.END));
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            TransitionManager.beginDelayedTransition(swipeRefresh);
-        }
         swipeRefresh.setVisibility(View.VISIBLE);
     }
 

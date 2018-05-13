@@ -43,7 +43,7 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
         interactor.getListCryptoCurrency()
                 .map(cryptoCurrencies -> this.cryptoCurrencies = cryptoCurrencies)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterSuccess(cryptoCurrencies -> getViewState().showListCryptoCurrency())
+                .doOnSuccess(cryptoCurrencies -> getViewState().showListCryptoCurrency())
                 .doFinally(getViewState()::hideLoading)
                 .subscribe(this::preparationListCryptoCurrency, this::handleError);
     }
@@ -60,7 +60,6 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
         //TODO обработка ошибок
         Log.e(TAG, "handleError: " + throwable.getMessage(), throwable);
         getViewState().showErrorMessage("Произошла ошибка");
-        getViewState().hideLoading();
     }
 
     public void onSearch(String queryOfSearch) {
