@@ -6,6 +6,7 @@ import com.arellomobile.mvp.MvpView;
 
 import java.util.List;
 
+import finom.list.ruf.listcrypt.presentation.crypt_list.presenter.SortBy;
 import finom.list.ruf.listcrypt.presentation.data.CryptoCurrency;
 
 public interface ListCryptView {

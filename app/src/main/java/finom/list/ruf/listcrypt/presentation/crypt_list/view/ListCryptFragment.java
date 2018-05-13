@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuAdapter;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,21 +22,28 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import finom.list.ruf.listcrypt.R;
 import finom.list.ruf.listcrypt.presentation.crypt_list.presenter.ListCryptPresenter;
+import finom.list.ruf.listcrypt.presentation.crypt_list.presenter.SortBy;
 import finom.list.ruf.listcrypt.presentation.data.CryptoCurrency;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -97,17 +106,40 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
         presenter.start();
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_and_sort, menu);
 
+        if(menu instanceof MenuBuilder){
+            MenuBuilder menuBuilder = (MenuBuilder) menu;
+            menuBuilder.setOptionalIconsVisible(true);
+        }
+
         SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
         initSearchItemMenu(searchView);
 
-        MenuItem sortItem = menu.findItem(R.id.app_bar_sort);
-        initSortItemMenu(sortItem);
+        initSortItemMenu(menu, presenter.getSortBy(), presenter.isAscendingSort());
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void initSortItemMenu(Menu menu, SortBy sortBy, boolean isAscendingSort) {
+        //TODO значек группы уезжает к краю экрана, когда раскрыт SearchView. Адекватного решения не нашел. Если кто знает в чем проблема - подскажите.
+        menu.removeGroup(R.id.app_bar_sort_group);
+        for (SortBy sortByItem : SortBy.values()) {
+            MenuItem menuItem = menu.add(R.id.app_bar_sort_group, Menu.NONE, Menu.NONE, sortByItem.getTitle());
+            if (sortByItem == sortBy) {
+                menuItem.setIcon(isAscendingSort
+                        ? R.drawable.ic_baseline_expand_more_black_24px
+                        : R.drawable.ic_baseline_expand_less_black_24px);
+            }
+            menuItem.setOnMenuItemClickListener(item -> {
+                presenter.onMenuItemSortClick(sortByItem);
+                getActivity().invalidateOptionsMenu();
+                return true;
+            });
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -129,6 +161,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
 
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint(getText(R.string.search));
+        searchView.setQuery(presenter.getQueryOfSearch(), false);
 
         RxSearchView.queryTextChanges(searchView)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -136,10 +169,6 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
                 .map(CharSequence::toString)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(presenter::onSearch);
-    }
-
-    private void initSortItemMenu(MenuItem sortItem) {
-        //TODO кнопка сортировки
     }
 
     @Override

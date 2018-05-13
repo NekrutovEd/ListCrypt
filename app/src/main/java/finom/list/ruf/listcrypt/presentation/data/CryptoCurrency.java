@@ -3,6 +3,8 @@ package finom.list.ruf.listcrypt.presentation.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Comparator;
+
 public class CryptoCurrency {
 
     private String id;
@@ -31,6 +33,41 @@ public class CryptoCurrency {
     public boolean contains(String textSearch) {
         return name.toLowerCase().contains(textSearch.toLowerCase())
                 || symbol.toLowerCase().contains(textSearch.toLowerCase());
+    }
+
+    public int compareRank(CryptoCurrency cryptoCurrency) {
+        Integer rank = cryptoCurrency.getRank();
+        if (this.rank > rank) return 1;
+        else if (this.rank < rank) return -1;
+        else return 0;
+    }
+
+    public int comparePriceUsd(CryptoCurrency cryptoCurrency) {
+        Float priceUsd = cryptoCurrency.getPriceUsd();
+        if (this.priceUsd > priceUsd) return 1;
+        else if (this.priceUsd < priceUsd) return -1;
+        else return 0;
+    }
+
+    public int compareMarketCapUsd(CryptoCurrency cryptoCurrency) {
+        Long marketCapUsd = cryptoCurrency.getMarketCapUsd();
+        if (this.marketCapUsd > marketCapUsd) return 1;
+        else if (this.marketCapUsd < marketCapUsd) return -1;
+        else return 0;
+    }
+
+    public int compareVolumeUsd(CryptoCurrency cryptoCurrency) {
+        Long volumeUsd_24h = cryptoCurrency.getVolumeUsd_24h();
+        if (this.volumeUsd_24h > volumeUsd_24h) return 1;
+        else if (this.volumeUsd_24h < volumeUsd_24h) return -1;
+        else return 0;
+    }
+
+    public int comparePercentChange_24h(CryptoCurrency cryptoCurrency) {
+        Float percentChange_24h = cryptoCurrency.getPercentChange_24h();
+        if (this.percentChange_24h > percentChange_24h) return 1;
+        else if (this.percentChange_24h < percentChange_24h) return -1;
+        else return 0;
     }
 
     public String getId() {

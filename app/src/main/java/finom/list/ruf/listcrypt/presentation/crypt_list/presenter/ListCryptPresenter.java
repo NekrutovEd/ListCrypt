@@ -7,6 +7,7 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import finom.list.ruf.listcrypt.busines.interactor.Interactor;
@@ -23,7 +24,9 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
     private final Interactor interactor;
     private List<CryptoCurrency> cryptoCurrencies = new ArrayList<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private String textSearch = "";
+    private String queryOfSearch = "";
+    private SortBy sortBy = SortBy.RANK;
+    private boolean isAscendingSort = true;
 
     public ListCryptPresenter() {
         interactor = Interactor.INTERACTOR_IMPLEMENTATION;
@@ -31,7 +34,7 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
 
     public void start() {
         if (cryptoCurrencies != null && !cryptoCurrencies.isEmpty())
-            getViewState().updateListCryptoCurrency(cryptoCurrencies);
+            preparationListCryptoCurrency(cryptoCurrencies);
         else loadListCryptoCurrency();
     }
 
@@ -42,7 +45,7 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterSuccess(cryptoCurrencies -> getViewState().showListCryptoCurrency())
                 .doFinally(getViewState()::hideLoading)
-                .subscribe(this::filterListCryptoCurrency, this::handleError);
+                .subscribe(this::preparationListCryptoCurrency, this::handleError);
     }
 
     public void onSwipeToRefresh() {
@@ -58,23 +61,47 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
         Log.e(TAG, "handleError: " + throwable.getMessage(), throwable);
     }
 
-    public void onSearch(String textSearch) {
-        this.textSearch = textSearch;
-        filterListCryptoCurrency(cryptoCurrencies);
+    public void onSearch(String queryOfSearch) {
+        this.queryOfSearch = queryOfSearch;
+        preparationListCryptoCurrency(cryptoCurrencies);
     }
 
-    private void filterListCryptoCurrency(List<CryptoCurrency> cryptoCurrencies) {
+    private void preparationListCryptoCurrency(List<CryptoCurrency> cryptoCurrencies) {
         compositeDisposable.clear();
-        if (textSearch.isEmpty()) {
+        Collections.sort(cryptoCurrencies, sortBy.getComparator());
+        if (!isAscendingSort) Collections.reverse(cryptoCurrencies);
+        if (queryOfSearch.isEmpty()) {
             getViewState().updateListCryptoCurrency(cryptoCurrencies);
         } else {
             List<CryptoCurrency> result = new ArrayList<>();
             compositeDisposable.add(Observable.fromIterable(cryptoCurrencies)
                     .subscribeOn(Schedulers.computation())
-                    .filter(cryptoCurrency -> cryptoCurrency.contains(textSearch))
+                    .filter(cryptoCurrency -> cryptoCurrency.contains(queryOfSearch))
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnComplete(() -> getViewState().updateListCryptoCurrency(result))
                     .subscribe(result::add));
         }
+    }
+
+    public void onMenuItemSortClick(SortBy sortBy) {
+        if (this.sortBy == sortBy) {
+            isAscendingSort = !isAscendingSort;
+        } else {
+            this.sortBy = sortBy;
+            isAscendingSort = true;
+        }
+        preparationListCryptoCurrency(cryptoCurrencies);
+    }
+
+    public boolean isAscendingSort() {
+        return isAscendingSort;
+    }
+
+    public SortBy getSortBy() {
+        return sortBy;
+    }
+
+    public String getQueryOfSearch() {
+        return queryOfSearch;
     }
 }
