@@ -31,7 +31,7 @@
             android:gravity="center_vertical|start"
             android:text="Bitcoin"
             android:textColor="@color/colorPrimary"
-            app:layout_constraintEnd_toStartOf="@id/view_holder_list_crypt_item_price_change"
+            app:layout_constraintEnd_toStartOf="@id/view_holder_list_crypt_item_percent_change_24h"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_holder_list_crypt_item_symbol" />
 
@@ -49,7 +49,7 @@
             app:layout_constraintTop_toTopOf="@id/view_holder_list_crypt_item_symbol" />
 
         <TextView
-            android:id="@+id/view_holder_list_crypt_item_price_change"
+            android:id="@+id/view_holder_list_crypt_item_percent_change_24h"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"

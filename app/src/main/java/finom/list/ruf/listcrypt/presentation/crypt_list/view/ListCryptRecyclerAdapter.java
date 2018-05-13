@@ -14,9 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import finom.list.ruf.listcrypt.R;
-import finom.list.ruf.listcrypt.busines.interactor.Interactor;
 import finom.list.ruf.listcrypt.presentation.data.CryptoCurrency;
-import finom.list.ruf.listcrypt.repository.dto.CryptoCurrencyDTO;
 
 class ListCryptRecyclerAdapter extends RecyclerView.Adapter<ListCryptRecyclerAdapter.ListCryptViewHolder> {
 
@@ -66,7 +64,7 @@ class ListCryptRecyclerAdapter extends RecyclerView.Adapter<ListCryptRecyclerAda
             marketCapTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_market_cap);
             volumeTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_volume);
             priceTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_price);
-            priceChangeTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_price_change);
+            priceChangeTextView = itemView.findViewById(R.id.view_holder_list_crypt_item_percent_change_24h);
         }
 
         private void setCryptoCurrency(CryptoCurrency cryptoCurrency) {

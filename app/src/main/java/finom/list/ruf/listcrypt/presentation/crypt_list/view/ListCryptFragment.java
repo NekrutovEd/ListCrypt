@@ -1,14 +1,13 @@
 package finom.list.ruf.listcrypt.presentation.crypt_list.view;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuAdapter;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,22 +21,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +38,7 @@ import finom.list.ruf.listcrypt.R;
 import finom.list.ruf.listcrypt.presentation.crypt_list.presenter.ListCryptPresenter;
 import finom.list.ruf.listcrypt.presentation.crypt_list.presenter.SortBy;
 import finom.list.ruf.listcrypt.presentation.data.CryptoCurrency;
+import finom.list.ruf.listcrypt.presentation.main.ListCryptActivity;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class ListCryptFragment extends MvpAppCompatFragment implements ListCryptView.View {
@@ -57,6 +51,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
         return new ListCryptPresenter();
     }
 
+    private ListCryptActivity activity;
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefresh;
     private ListCryptRecyclerAdapter adapter;
@@ -66,6 +61,16 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
         ListCryptFragment fragment = new ListCryptFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (getActivity() instanceof ListCryptActivity) {
+            activity = (ListCryptActivity) getActivity();
+        } else {
+            throw new ClassCastException(getActivity().getLocalClassName() + " should extends ListCryptActivity");
+        }
     }
 
     @Nullable
@@ -88,7 +93,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
 
     private void initToolbar(View root) {
         Toolbar toolbar = root.findViewById(R.id.fragment_list_crypt_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        activity.setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
     }
 
@@ -125,7 +130,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
     }
 
     private void initSortItemMenu(Menu menu, SortBy sortBy, boolean isAscendingSort) {
-        //TODO значек группы уезжает к краю экрана, когда раскрыт SearchView. Адекватного решения не нашел. Если кто знает в чем проблема - подскажите.
+        //TODO значок группы уезжает к краю экрана, когда раскрыт SearchView. Адекватного решения не нашел. Если кто знает в чем проблема - подскажите.
         menu.removeGroup(R.id.app_bar_sort_group);
         for (SortBy sortByItem : SortBy.values()) {
             MenuItem menuItem = menu.add(R.id.app_bar_sort_group, Menu.NONE, Menu.NONE, sortByItem.getTitle());
@@ -136,7 +141,9 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
             }
             menuItem.setOnMenuItemClickListener(item -> {
                 presenter.onMenuItemSortClick(sortByItem);
-                getActivity().invalidateOptionsMenu();
+                if (getActivity() != null) {
+                    getActivity().invalidateOptionsMenu();
+                }
                 return true;
             });
         }
@@ -190,5 +197,10 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
             TransitionManager.beginDelayedTransition(swipeRefresh);
         }
         swipeRefresh.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showCryptDetails(CryptoCurrency cryptoCurrency) {
+        activity.showCryptDetailsFragment(cryptoCurrency);
     }
 }

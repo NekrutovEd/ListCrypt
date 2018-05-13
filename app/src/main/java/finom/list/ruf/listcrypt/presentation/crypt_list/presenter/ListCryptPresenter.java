@@ -53,7 +53,7 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
     }
 
     public void onClickCryptoCurrency(CryptoCurrency cryptoCurrency) {
-        //TODO показать экран деталей
+        getViewState().showCryptDetails(cryptoCurrency);
     }
 
     private void handleError(Throwable throwable) {
