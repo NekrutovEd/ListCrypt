@@ -11,12 +11,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +100,13 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
     private void initToolbar(View root) {
         Toolbar toolbar = root.findViewById(R.id.fragment_list_crypt_toolbar);
         activity.setSupportActionBar(toolbar);
+
+        SearchView searchView = toolbar.findViewById(R.id.fragment_list_crypt_toolbar_search);
+        initSearchView(searchView);
+
+        ImageView sortImageView = toolbar.findViewById(R.id.fragment_list_crypt_toolbar_sort);
+        sortImageView.setOnClickListener(this::initSortMenu);
+
         setHasOptionsMenu(true);
     }
 
@@ -111,28 +119,20 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
     }
 
     @SuppressLint("RestrictedApi")
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_and_sort, menu);
+    private void initSortMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(view.getContext(), view, Gravity.BOTTOM);
 
+        Menu menu = popupMenu.getMenu();
         if (menu instanceof MenuBuilder) {
             MenuBuilder menuBuilder = (MenuBuilder) menu;
             menuBuilder.setOptionalIconsVisible(true);
         }
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        initSearchItemMenu(searchView);
+        SortBy sortBy = presenter.getSortBy();
+        boolean isAscendingSort = presenter.isAscendingSort();
 
-        initSortItemMenu(menu, presenter.getSortBy(), presenter.isAscendingSort());
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    private void initSortItemMenu(Menu menu, SortBy sortBy, boolean isAscendingSort) {
-        //TODO значок группы уезжает к краю экрана, когда раскрыт SearchView. Адекватного решения не нашел. Если кто знает в чем проблема - подскажите.
-        menu.removeGroup(R.id.app_bar_sort_group);
         for (SortBy sortByItem : SortBy.values()) {
-            MenuItem menuItem = menu.add(R.id.app_bar_sort_group, Menu.NONE, Menu.NONE, sortByItem.getTitle());
+            MenuItem menuItem = menu.add(Menu.NONE, Menu.NONE, Menu.NONE, sortByItem.getTitle());
             if (sortByItem == sortBy) {
                 menuItem.setIcon(isAscendingSort
                         ? R.drawable.ic_baseline_expand_more_black_24px
@@ -140,23 +140,15 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
             }
             menuItem.setOnMenuItemClickListener(item -> {
                 presenter.onMenuItemSortClick(sortByItem);
-                if (getActivity() != null) {
-                    getActivity().invalidateOptionsMenu();
-                }
+                popupMenu.dismiss();
                 return true;
             });
         }
+        popupMenu.show();
     }
 
     @SuppressLint("CheckResult")
-    private void initSearchItemMenu(SearchView searchView) {
-        ImageView imageSearchMagIcon = searchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
-        ImageView imageSearchButton = searchView.findViewById(android.support.v7.appcompat.R.id.search_button);
-        ImageView imageClose = searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-        imageSearchMagIcon.setImageResource(R.drawable.ic_baseline_search_white_24px);
-        imageSearchButton.setImageResource(R.drawable.ic_baseline_search_white_24px);
-        imageClose.setImageResource(R.drawable.ic_baseline_close_white_24px);
-
+    private void initSearchView(SearchView searchView) {
         SearchView.SearchAutoComplete searchAutoComplete = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
 
         int colorWhite = getResources().getColor(R.color.colorWhite);
