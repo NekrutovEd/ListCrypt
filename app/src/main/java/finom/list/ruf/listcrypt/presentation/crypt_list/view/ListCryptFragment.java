@@ -3,8 +3,8 @@ package finom.list.ruf.listcrypt.presentation.crypt_list.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,9 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
-import android.transition.TransitionManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +43,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
 
     @InjectPresenter
     public ListCryptPresenter presenter;
+    private RecyclerView recyclerView;
 
     @ProvidePresenter
     public ListCryptPresenter providePresenter() {
@@ -84,7 +82,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
         swipeRefresh = root.findViewById(R.id.fragment_list_crypt_swipe_refresh);
         swipeRefresh.setOnRefreshListener(presenter::onSwipeToRefresh);
 
-        RecyclerView recyclerView = root.findViewById(R.id.fragment_list_crypt_recycler_view);
+        recyclerView = root.findViewById(R.id.fragment_list_crypt_recycler_view);
         recyclerView.setLayoutManager(getLayoutManager());
         adapter = new ListCryptRecyclerAdapter(presenter::onClickCryptoCurrency);
         recyclerView.setAdapter(adapter);
@@ -181,7 +179,9 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
 
     @Override
     public void updateListCryptoCurrency(@NonNull List<CryptoCurrency> cryptoCurrencies) {
+        Parcelable instanceState = recyclerView.getLayoutManager().onSaveInstanceState();
         adapter.setCryptoCurrencies(cryptoCurrencies);
+        recyclerView.getLayoutManager().onRestoreInstanceState(instanceState);
     }
 
     @Override

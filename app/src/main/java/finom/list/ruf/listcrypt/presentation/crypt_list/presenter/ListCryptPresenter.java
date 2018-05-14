@@ -1,6 +1,5 @@
 package finom.list.ruf.listcrypt.presentation.crypt_list.presenter;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -23,7 +22,8 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
     private static final String TAG = "ListCryptPresenter";
     private final Interactor interactor;
     private List<CryptoCurrency> cryptoCurrencies = new ArrayList<>();
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposableForPreparation = new CompositeDisposable();
+    private CompositeDisposable compositeDisposableForLoading = new CompositeDisposable();
     private String queryOfSearch = "";
     private SortBy sortBy = SortBy.RANK;
     private boolean isAscendingSort = true;
@@ -38,14 +38,22 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
         else loadListCryptoCurrency();
     }
 
-    @SuppressLint("CheckResult")
     private void loadListCryptoCurrency() {
-        interactor.getListCryptoCurrency()
-                .map(cryptoCurrencies -> this.cryptoCurrencies = cryptoCurrencies)
+        compositeDisposableForLoading.add(interactor.getListCryptoCurrency()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(cryptoCurrencies -> getViewState().showListCryptoCurrency())
                 .doFinally(getViewState()::hideLoading)
-                .subscribe(this::preparationListCryptoCurrency, this::handleError);
+                .subscribe(cryptoCurrencies -> {
+                    this.cryptoCurrencies = cryptoCurrencies;
+                    getViewState().showListCryptoCurrency();
+                    preparationListCryptoCurrency(cryptoCurrencies);
+                }, this::handleError));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        compositeDisposableForLoading.clear();
+        compositeDisposableForPreparation.clear();
     }
 
     public void onSwipeToRefresh() {
@@ -67,21 +75,22 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
         preparationListCryptoCurrency(cryptoCurrencies);
     }
 
-    private void preparationListCryptoCurrency(List<CryptoCurrency> cryptoCurrencies) {
-        compositeDisposable.clear();
-        Collections.sort(cryptoCurrencies, sortBy.getComparator());
-        if (!isAscendingSort) Collections.reverse(cryptoCurrencies);
-        if (queryOfSearch.isEmpty()) {
-            getViewState().updateListCryptoCurrency(cryptoCurrencies);
-        } else {
-            List<CryptoCurrency> result = new ArrayList<>();
-            compositeDisposable.add(Observable.fromIterable(cryptoCurrencies)
-                    .subscribeOn(Schedulers.computation())
-                    .filter(cryptoCurrency -> cryptoCurrency.contains(queryOfSearch))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnComplete(() -> getViewState().updateListCryptoCurrency(result))
-                    .subscribe(result::add));
-        }
+    private void preparationListCryptoCurrency(List<CryptoCurrency> newCryptoCurrencies) {
+        compositeDisposableForPreparation.clear();
+        compositeDisposableForPreparation.add(Observable.fromIterable(newCryptoCurrencies)
+                .subscribeOn(Schedulers.computation())
+                .filter(cryptoCurrency -> cryptoCurrency.contains(queryOfSearch))
+                .reduce(new ArrayList<CryptoCurrency>(), (result, cryptoCurrency) -> {
+                    result.add(cryptoCurrency);
+                    return result;
+                })
+                .map(cryptoCurrencies -> {
+                    Collections.sort(cryptoCurrencies, sortBy.getComparator());
+                    if (!isAscendingSort) Collections.reverse(cryptoCurrencies);
+                    return cryptoCurrencies;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getViewState()::updateListCryptoCurrency));
     }
 
     public void onMenuItemSortClick(SortBy sortBy) {
