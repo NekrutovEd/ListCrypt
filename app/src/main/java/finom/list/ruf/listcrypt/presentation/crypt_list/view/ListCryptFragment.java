@@ -43,7 +43,6 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
 
     @InjectPresenter
     public ListCryptPresenter presenter;
-    private RecyclerView recyclerView;
 
     @ProvidePresenter
     public ListCryptPresenter providePresenter() {
@@ -52,6 +51,7 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
 
     private ListCryptActivity activity;
     private ProgressBar progressBar;
+    private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
     private ListCryptRecyclerAdapter adapter;
 
@@ -70,6 +70,12 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
         } else {
             throw new ClassCastException(getActivity().getLocalClassName() + " should extends ListCryptActivity");
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(presenter);
     }
 
     @Nullable
@@ -102,12 +108,6 @@ public class ListCryptFragment extends MvpAppCompatFragment implements ListCrypt
         } else {
             return new LinearLayoutManager(getContext());
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        presenter.start();
     }
 
     @SuppressLint("RestrictedApi")

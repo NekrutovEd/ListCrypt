@@ -1,5 +1,8 @@
 package finom.list.ruf.listcrypt.presentation.crypt_list.presenter;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -18,7 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 @InjectViewState
-public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
+public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> implements LifecycleObserver {
     private static final String TAG = "ListCryptPresenter";
     private final Interactor interactor;
     private List<CryptoCurrency> cryptoCurrencies = new ArrayList<>();
@@ -32,6 +35,8 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
         interactor = Interactor.INTERACTOR_IMPLEMENTATION;
     }
 
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void start() {
         if (cryptoCurrencies != null && !cryptoCurrencies.isEmpty())
             preparationListCryptoCurrency(cryptoCurrencies);
@@ -50,6 +55,7 @@ public class ListCryptPresenter extends MvpPresenter<ListCryptView.View> {
     }
 
     @Override
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onDestroy() {
         super.onDestroy();
         compositeDisposableForLoading.clear();
