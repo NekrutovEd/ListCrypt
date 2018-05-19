@@ -37,7 +37,9 @@ public class ListCryptActivity extends AppCompatActivity {
     public void showCryptDetailsFragment(CryptoCurrency cryptoCurrency) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .setCustomAnimations(
+                        R.anim.right_to_left_enter, R.anim.right_to_left_exit,
+                        R.anim.left_to_right_enter, R.anim.left_to_right_exit)
                 .replace(R.id.activity_main_fragment_layout, CryptDetailsFragment.newInstance(cryptoCurrency))
                 .addToBackStack(null)
                 .commit();

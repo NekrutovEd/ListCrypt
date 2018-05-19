@@ -2,6 +2,7 @@ package finom.list.ruf.listcrypt.presentation.crypt_list.view;
 
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,19 +26,21 @@ class ListCryptRecyclerAdapter extends RecyclerView.Adapter<ListCryptRecyclerAda
         this.onClickCryptoCurrencyListener = onClickCryptoCurrencyListener;
     }
 
-    void setCryptoCurrencies(@NonNull List<CryptoCurrency> cryptoCurrencies) {
-        this.cryptoCurrencies = cryptoCurrencies;
-        notifyDataSetChanged();
+    void setCryptoCurrencies(@NonNull List<CryptoCurrency> newCryptoCurrencies) {
+        DiffUtil.DiffResult diffUtilResult = DiffUtil.calculateDiff(new DiffUtilCrypt(newCryptoCurrencies, cryptoCurrencies));
+        this.cryptoCurrencies = newCryptoCurrencies;
+        diffUtilResult.dispatchUpdatesTo(this);
     }
 
+    @NonNull
     @Override
-    public ListCryptViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ListCryptViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new ListCryptViewHolder(inflater.inflate(R.layout.view_holder_list_crypt_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ListCryptViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ListCryptViewHolder holder, int position) {
         holder.setCryptoCurrency(cryptoCurrencies.get(position));
     }
 

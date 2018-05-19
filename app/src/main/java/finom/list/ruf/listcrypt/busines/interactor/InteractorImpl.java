@@ -3,7 +3,6 @@ package finom.list.ruf.listcrypt.busines.interactor;
 import java.util.ArrayList;
 import java.util.List;
 
-import finom.list.ruf.listcrypt.busines.entity.CryptoCurrencyEntity;
 import finom.list.ruf.listcrypt.presentation.data.CryptoCurrency;
 import finom.list.ruf.listcrypt.repository.Repository;
 import finom.list.ruf.listcrypt.repository.RepositoryImpl;
@@ -34,14 +33,11 @@ public class InteractorImpl implements Interactor {
     @Override
     public Single<List<CryptoCurrency>> getListCryptoCurrency() {
         return repository.getListCryptoCurrency()
-                .map(this::castListCrypto);
-    }
-
-    private List<CryptoCurrency> castListCrypto(List<CryptoCurrencyEntity> cryptoCurrencies) {
-        List<CryptoCurrency> result = new ArrayList<>();
-        for (CryptoCurrencyEntity cryptoCurrencyEntity : cryptoCurrencies) {
-            result.add(cryptoCurrencyEntity.copyTo());
-        }
-        return result;
+                .toObservable()
+                .flatMapIterable(cryptoCurrencyEntities -> cryptoCurrencyEntities)
+                .reduce(new ArrayList<CryptoCurrency>(), (cryptoCurrencies, cryptoCurrencyEntity) -> {
+                    cryptoCurrencies.add(cryptoCurrencyEntity.copyTo());
+                    return cryptoCurrencies;
+                });
     }
 }

@@ -1,10 +1,5 @@
 package finom.list.ruf.listcrypt.presentation.data;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.Comparator;
-
 public class CryptoCurrency {
 
     private String id;
@@ -68,6 +63,60 @@ public class CryptoCurrency {
         if (this.percentChange_24h > percentChange_24h) return 1;
         else if (this.percentChange_24h < percentChange_24h) return -1;
         else return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CryptoCurrency that = (CryptoCurrency) o;
+
+        if (!id.equals(that.id)) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (symbol != null ? !symbol.equals(that.symbol) : that.symbol != null) return false;
+        if (rank != null ? !rank.equals(that.rank) : that.rank != null) return false;
+        if (priceUsd != null ? !priceUsd.equals(that.priceUsd) : that.priceUsd != null)
+            return false;
+        if (priceBtc != null ? !priceBtc.equals(that.priceBtc) : that.priceBtc != null)
+            return false;
+        if (volumeUsd_24h != null ? !volumeUsd_24h.equals(that.volumeUsd_24h) : that.volumeUsd_24h != null)
+            return false;
+        if (marketCapUsd != null ? !marketCapUsd.equals(that.marketCapUsd) : that.marketCapUsd != null)
+            return false;
+        if (availableSupply != null ? !availableSupply.equals(that.availableSupply) : that.availableSupply != null)
+            return false;
+        if (totalSupply != null ? !totalSupply.equals(that.totalSupply) : that.totalSupply != null)
+            return false;
+        if (maxSupply != null ? !maxSupply.equals(that.maxSupply) : that.maxSupply != null)
+            return false;
+        if (percentChange_1h != null ? !percentChange_1h.equals(that.percentChange_1h) : that.percentChange_1h != null)
+            return false;
+        if (percentChange_24h != null ? !percentChange_24h.equals(that.percentChange_24h) : that.percentChange_24h != null)
+            return false;
+        if (percentChange_7d != null ? !percentChange_7d.equals(that.percentChange_7d) : that.percentChange_7d != null)
+            return false;
+        return lastUpdated != null ? lastUpdated.equals(that.lastUpdated) : that.lastUpdated == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (symbol != null ? symbol.hashCode() : 0);
+        result = 31 * result + (rank != null ? rank.hashCode() : 0);
+        result = 31 * result + (priceUsd != null ? priceUsd.hashCode() : 0);
+        result = 31 * result + (priceBtc != null ? priceBtc.hashCode() : 0);
+        result = 31 * result + (volumeUsd_24h != null ? volumeUsd_24h.hashCode() : 0);
+        result = 31 * result + (marketCapUsd != null ? marketCapUsd.hashCode() : 0);
+        result = 31 * result + (availableSupply != null ? availableSupply.hashCode() : 0);
+        result = 31 * result + (totalSupply != null ? totalSupply.hashCode() : 0);
+        result = 31 * result + (maxSupply != null ? maxSupply.hashCode() : 0);
+        result = 31 * result + (percentChange_1h != null ? percentChange_1h.hashCode() : 0);
+        result = 31 * result + (percentChange_24h != null ? percentChange_24h.hashCode() : 0);
+        result = 31 * result + (percentChange_7d != null ? percentChange_7d.hashCode() : 0);
+        result = 31 * result + (lastUpdated != null ? lastUpdated.hashCode() : 0);
+        return result;
     }
 
     public String getId() {
